@@ -37,11 +37,11 @@ And also Haskell compiler.
 
 <h3>How to install</h3>
 
-<p>TODO.</p>
+<p>It's easy to install Ajhc on Debian flaver system.</p>
 
 <pre><code>$ export LANG=ja_JP.UTF-8
-$ sudo apt-get install make locales-all locales autoconf \
-  libreadline-dev libwww-perl graphviz haskell-platform drift pandoc \
+$ sudo apt-get -qq -y install make locales autoconf libreadline-dev \
+  libwww-perl libconfig-yaml-perl graphviz haskell-platform drift pandoc \
   libghc-readline-dev libghc-utf8-string-dev libghc-hssyck-dev libghc-pandoc-dev
 $ git clone git://github.com/ajhc/ajhc.git
 $ git checkout arafura
@@ -50,7 +50,14 @@ $ autoreconf -i
 $ ./configure
 $ make
 $ sudo make install
+$ ajhc --version
+ajhc 0.8.1 (-0)
+compiled by ghc-7.4 on a x86_64 running linux
 </code></pre>
+
+<h3>Usage</h3>
+
+Please read <a href="http://repetae.net/computer/jhc/manual.html">Jhc User's Manual</a>.
 
 <h3>Contact</h3>
 
@@ -61,8 +68,10 @@ $ sudo make install
         <aside id="sidebar">
 	  <p><a href="https://travis-ci.org/ajhc/ajhc"><img src="https://travis-ci.org/ajhc/ajhc.png" alt="Build Status" style="max-width:100%;"></a></p>
 
-	  <p><img src="images/NetBSD-smaller.png"></img></p>
           <p>This project is founded by <a href="http://metasepi.masterq.net/">Metasepi Project</a>.</p>
+	  <p><img src="images/NetBSD-smaller.png"></p>
+
+	  <p><a href="http://validator.w3.org/check?uri=http%3A%2F%2Fajhc.github.com%2F&amp;charset=%28detect+automatically%29&amp;doctype=Inline&amp;group=0">W3C Markup Validator</a></p>
         </aside>
 
       </div>

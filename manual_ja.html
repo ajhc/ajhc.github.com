@@ -1,0 +1,1109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="John Meacham &amp; Metasepiチーム" />
+  <title>Ajhcユーザーズマニュアル</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="manual.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">Ajhcユーザーズマニュアル</h1>
+<h2 class="author">John Meacham &amp; Metasepiチーム</h2>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#使い方">使い方</a><ul>
+<li><a href="#プロジェクトをビルドする">プロジェクトをビルドする</a></li>
+<li><a href="#ライブラリを使う">ライブラリを使う</a></li>
+<li><a href="#環境変数">環境変数</a></li>
+<li><a href="#haskellライブラリをビルドする">Haskellライブラリをビルドする</a><ul>
+<li><a href="#ライブラリファイルのフォーマット">ライブラリファイルのフォーマット</a></li>
+</ul></li>
+<li><a href="#依存情報">依存情報</a></li>
+</ul></li>
+<li><a href="#オプション">オプション</a><ul>
+<li><a href="#コードオプション">コードオプション</a></li>
+<li><a href="#デバッグ情報のダンプ">デバッグ情報のダンプ</a></li>
+</ul></li>
+<li><a href="#プラグマ">プラグマ</a><ul>
+<li><a href="#関数の属性">関数の属性</a></li>
+<li><a href="#クラスプラグマ">クラスプラグマ</a></li>
+<li><a href="#書き換え規則と特殊化">書き換え規則と特殊化</a></li>
+<li><a href="#型プラグマ">型プラグマ</a></li>
+<li><a href="#ヘッダプラグマ">ヘッダプラグマ</a></li>
+</ul></li>
+<li><a href="#拡張">拡張</a><ul>
+<li><a href="#モジュールのサーチパス">モジュールのサーチパス</a></li>
+<li><a href="#ffiへの拡張">FFIへの拡張</a><ul>
+<li><a href="#複数の返値をともなうforeign-import">複数の返値をともなうforeign import</a></li>
+<li><a href="#呼び出し規約capi">呼び出し規約'capi'</a></li>
+<li><a href="#パッケージに関連した依存">パッケージに関連した依存</a></li>
+</ul></li>
+<li><a href="#importexportされる名前空間">import/exportされる名前空間</a></li>
+<li><a href="#ユーザ定義された種">ユーザ定義された種</a></li>
+<li><a href="#独立deriving">独立deriving</a></li>
+<li><a href="#ランクn多相性">ランクN多相性</a></li>
+<li><a href="#存在型">存在型</a></li>
+<li><a href="#アンボックス化された値">アンボックス化された値</a><ul>
+<li><a href="#アンボックス化タプル">アンボックス化タプル</a></li>
+<li><a href="#アンボックス化文字列">アンボックス化文字列</a></li>
+<li><a href="#アンボックス化文字">アンボックス化文字</a></li>
+<li><a href="#アンボックス化数値">アンボックス化数値</a></li>
+<li><a href="#アンボックス化された値の取り扱い">アンボックス化された値の取り扱い</a></li>
+</ul></li>
+<li><a href="#foreignプリミティブ">Foreignプリミティブ</a></li>
+</ul></li>
+<li><a href="#差異">差異</a><ul>
+<li><a href="#haskell-98との違い">Haskell 98との違い</a><ul>
+<li><a href="#言語差分">言語差分</a></li>
+<li><a href="#ライブラリへの変更">ライブラリへの変更</a></li>
+<li><a href="#ライブラリの追加">ライブラリの追加</a></li>
+</ul></li>
+<li><a href="#ghcとの注目すべき差異">GHCとの注目すべき差異</a></li>
+<li><a href="#仕様の欠陥">仕様の欠陥</a></li>
+</ul></li>
+<li><a href="#クロスコンパイル">クロスコンパイル</a><ul>
+<li><a href="#基本">基本</a></li>
+<li><a href="#targets.ini">targets.ini</a></li>
+<li><a href="#利用可能なオプション">利用可能なオプション</a></li>
+<li><a href="#special-defines-to-set-cflags">Special defines to set cflags</a></li>
+</ul></li>
+<li><a href="#内部設計">内部設計</a><ul>
+<li><a href="#ランタイムシステム">ランタイムシステム</a></li>
+<li><a href="#ajhcコア型システム">Ajhcコア型システム</a><ul>
+<li><a href="#ボックス化kind種について">ボックス化kind(種)について</a></li>
+<li><a href="#種類boxアンボックス化タプルとその同類について">種類box、アンボックス化タプルとその同類について</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="使い方"><a href="#使い方">使い方</a></h1>
+<h2 id="プロジェクトをビルドする"><a href="#プロジェクトをビルドする">プロジェクトをビルドする</a></h2>
+<p>Ajhcはソースコードの依存関係を独自に解析してくれるため、 コマンドラインから'main'関数を含んだファイルを指定するだけでソースコード全体をコンパイルできる。 例えばソースコード'HelloWorld.hs'をコンパイルしたければ、次のようにコンパイルすれば'hello'という名前の実行バイナリが生成される。</p>
+<pre><code>; ajhc HelloWorld.hs -o hello</code></pre>
+<p>Ajhcはサーチパスからモジュールを探す。 そのサーチパスは既定値ではカレントディレクトリである。 モジュールは名前にもとづいて検索される。 例えばData.Fooモジュールは'Data/Foo.hs'もしくは'Data.Foo.hs'のパスから探されることになる。 このサーチパスは'-i'コマンドラインオプションを使って指定できる。 また、'AJHC_PATH'環境変数を使って指定することもできる。</p>
+<h2 id="ライブラリを使う"><a href="#ライブラリを使う">ライブラリを使う</a></h2>
+<p>Ajhcライブラリは、例えば'base-1.0.hl'のような、'hl'という拡張子を持つ単一のファイルである。 何かHaskellライブラリを使うためには、Ajhcの検索するディレクトリにこのファイルを置くだけで良い。 例えば $HOME/lib/ajhc などだ。 AJHC_LIBRARY_PATH環境変数を定義することで、別の位置をライブラリのサーチパスとして指定することができる。 また、-Lコマンドラインオプションを使ってもサーチパスを指定できる。 さらに-L-オプションを使えばサーチパスの設定を既定値に戻すことさえできる。</p>
+<p>'hl'ファイルが適切な位置に置かれていれば、'-p'コマンドラインオプションを使って使用するライブラリを指定することができる。 例えば'mylibrary-1.0.hl'を既にサーチパスに配置済みであれば、以下のように使うことができる。</p>
+<pre><code>; ajhc -p mylibrary MyProgram.hs -o myprogram</code></pre>
+<p>--list-librariesオプションを使えば全ての使用可能なライブラリのリストを得られる。 さらに'-v'オプションを追加することで、各ライブラリに関する詳細な情報を得ることもできる。 これらの情報はYAMLフォーマットを使って生成されたものである。</p>
+<h2 id="環境変数"><a href="#環境変数">環境変数</a></h2>
+<p>Ajhcの挙動はいくつかの環境変数によって制御される。</p>
+<p>AJHC_OPTS : jhcのコマンドライン直後に挿入されるオプション群</p>
+<p>AJHC_PATH : モジュールの検索パス</p>
+<p>AJHC_LIBRARY_PATH : ライブラリの検索パス</p>
+<p>AJHC_CACHE : Ajhcがキャッシュとして使用するディレクトリ。キャッシュはAjhcのパフォーマンス向上にはかかせない。既定値は~/.ajhc/cache。</p>
+<h2 id="haskellライブラリをビルドする"><a href="#haskellライブラリをビルドする">Haskellライブラリをビルドする</a></h2>
+<p>ライブラリは--build-hlオプションで指定されたライブラリファイルの内容にもとづいてビルドされる。 このライブラリファイルのフォーマットはYAMLである。</p>
+<pre><code>; ajhc --build-hl mylibrary.yaml</code></pre>
+<h3 id="ライブラリファイルのフォーマット"><a href="#ライブラリファイルのフォーマット">ライブラリファイルのフォーマット</a></h3>
+<p>ライブラリファイルはYAMLフォーマットで、Ajhcは自分の理解できるフィールドだけを解釈し、残りは無視する。</p>
+<p>Name : ライブラリの名前</p>
+<p>Version : ライブラリのバージョン。バージョン番号は'-p'コマンドラインオプションを使う際に区別するために使われる。しかし、それ以外の用途にはAjhcは使わない。</p>
+<p>Exposed-Modules : ライブラリに含まれ、ライブラリの利用者への公開インターフェイスとなる一連のモジュール。この欄が他のライブラリ内のモジュールを含んでいた場合、再度このライブラリでも公開インターフェイス扱いされることになる。</p>
+<p>Hidden-Modules : ライブラリ内部で使用されるかもしれないが、公開インターフェイスにはならない一連のモジュール。Ajhcはこの情報を元にして最適化を行なう。このリストがライブラリのビルドに網羅的でなければ、Ajhcはワーニングメッセージを出力する。</p>
+<p>Extensions : このモジュールをコンパイルするのに必要な拡張のリスト。Ajhcはできうるかぎりghc拡張と似た拡張を提供するつもりである。</p>
+<p>Options : ライブラリビルド時に使うその他のコマンドラインオプション</p>
+<p>Build-Depends : ビルドに必要になるライブラリ。'-p'コマンドラインオプションと同じフォーマットで指定する。</p>
+<p>Hs-Source-Dirs : Haskellソースコードを探すディレクトリ。'-i'コマンドラインオプションと異なり、この欄にはライブラリ詳細を記載した.yamlファイルからの相対パスを記載する。'-i'オプションを使う際にはカレントワーキングディレクトリからの相対パスを記載すること。</p>
+<p>Include-Dirs : プリプロセッサが'-I'オプションで検索するディレクトリ。このディレクトリもyamlファイルが置かれたディレクトリからの相対パスとして指定すること。</p>
+<p>C-Sources : このライブラリを使うプログラムにリンクされるべきC言語ソースコードファイル群。</p>
+<p>Include-Sources : このライブラリを使ったプログラムのビルドに必要なC言語のヘッダを指定する。これらのヘッダはビルド時にincludeされることはあっても、実行ファイルにリンクされることはない。</p>
+<p>ライブラリファイルの例としてlib/jhc/jhc.yamlとlib/base/base.yamlを参考のこと。</p>
+<h2 id="依存情報"><a href="#依存情報">依存情報</a></h2>
+<p>Ajhcは依存情報を出力できる。 この依存情報はソースコードとライブラリがコンパイル時にその他の要素にどのように依存しているかを表現している。 依存情報は--deps name.yamlオプションをAjhcに入力するとname.yamlファイルに出力される。 この依存情報もまたYAMLフォーマットで、各項目な以下のような意味を持っている。</p>
+<ul>
+<li>LibraryDeps: 依存しているライブラリ。使用しているライブラリのファイル名と同時にハッシュ値も列挙する。</li>
+<li>LibraryDesc: ライブラリをビルドした際、この項目は使っているライブラリファイルの名前を含む。</li>
+<li>ModuleDeps: 直接依存しているモジュール名のリスト</li>
+<li>ModuleSouce: 使用しているソースコードファイル名に対応するモジュール名</li>
+</ul>
+<p>deps.yamlを扱うサンプルとして'utils/deps_to_make.prl'を参照のこと。</p>
+<h1 id="オプション"><a href="#オプション">オプション</a></h1>
+<pre><code>Usage: ajhc [OPTION...] Main.hs
+  -V                --version                 バージョン表示
+                    --version-context         バージョン履歴表示
+                    --help                    ヘルプメッセージ表示
+                    --info                    コンパイラ設定表示
+                    --purge-cache             コンパイルキャッッシュの削除
+  -v                --verbose                 stderrに冗長なメッセージ表示
+  -z                                          冗長な統計情報を表示
+  -d [no-]flag                                コンパイルパイプラインの特定の情報をダンプ
+  -f [no-]flag                                コンパイルフラグの有効/無効
+  -X ExtensionName                            言語拡張の有効化
+  -o FILE           --output=FILE             出力ファイル名を指定
+  -i DIR            --include=DIR             ソースファイル検索パス
+  -I DIR                                      プリプロセッサのインクルードパスを追加
+  -D NAME=VALUE                               プリプロセッサに渡すdefineを追加
+                    --optc=option             Cコンパイラに渡すその他のオプション
+  -c                                          モジュールを単体でコンパイル
+  -C                                          C言語コードへコンパイル
+  -E                                          ソースコードをプリプロセッサにかけてstdoutへ出力
+  -k                --keepgoing               エラーを無視してコンパイルを続行
+                    --cross                   クロスコンパイルを有効に、-mオプションでターゲットを指定すること
+                    --stop=parse/typecheck/c  parse/typecheck/cの直後で停止する
+                    --width=COLUMNS           デバッグ出力のスクリーン幅を変更
+                    --main=Main.main          mainエントリポイントを指定
+  -m arch           --arch=arch               クロスコンパイルターゲットを指定
+                    --entry=&lt;expr&gt;            mainエントリポイントを式を使って指定
+                    --show-ho=file.ho         hoファイルの概要をダンプ
+                    --noauto                  haskell98パッケージを自動的に読み込まない
+  -p package                                  指定したライブラリを使用する
+  -L path                                     ライブラリを指定したパスから検索する
+                    --build-hl=desc.yaml      指定したライブラリファイルからHaskellライブラリをビルド
+                    --annotate-source=&lt;dir&gt;   指定したディレクトリにプリプロセス済みソースコードを出力
+                    --deps=&lt;file.yaml&gt;        依存情報を指定したファイルに書き込む
+                    --interactive             インタラクティブ実行                                                     (デバッグ用途)
+                    --ignore-cache            コンパイルキャッシュを無視する
+                    --readonly-cache          コンパイルキャッシュに追加情報を書き込まない
+                    --no-cache                コンパイルキャッシュを使わず、書き込みも行なわない
+                    --cache-dir=AJHC_CACHE    指定したディレクトリをコンパイルキャッシュとして使う
+                    --stale=Module            指定したモジュールがコンパイルキャッシュにあっても古い情報として扱う
+                    --list-libraries          インストール済みライブラリを表示
+                    --tdir=dir/               中間生成物を出力するディレクトリを指定する
+
+-dオプションの引数: &#39;-d help&#39;オプションで詳細
+    all-types, aspats, atom, bindgroups, boxy-steps, c, class, class-summary, core, core-afterlift
+    core-beforelift, core-initial, core-mangled, core-mini, core-pass, core-steps, datatable
+    datatable-builtin, dcons, decls, defs, derived, e-alias, e-info, e-size, e-verbose, exports, grin
+    grin-datalog, grin-final, grin-graph, grin-initial, grin-normalized, grin-posteval, grin-preeval
+    imports, ini, instance, kind, kind-steps, optimization-stats, parsed, preprocessed, program
+    progress, renamed, rules, rules-spec, scc-modules, sigenv, srcsigs, stats, steps, tags, the
+    types, verbose, veryverbose
+
+-fオプションの引数: &#39;-f help&#39;オプションで詳細
+    bang-patterns, boehm, controlled, cpp, debug, default, defaulting, exists, ffi, forall, full-int
+    glasgow-exts, global-optimize, inline-pragmas, jgc, lint, m4, monomorphism-restriction, negate
+    prelude, profile, raw, rules, standalone, type-analysis, type-families, unboxed-tuples
+    unboxed-values, user-kinds, wrapper</code></pre>
+<h2 id="コードオプション"><a href="#コードオプション">コードオプション</a></h2>
+<p>Ajhcの解釈やコンパイルは'-f'フラグでコントロールできる。 これらのオプションを以下に列挙する。また、その効力は'no-'をフラグ名に付けることで無効化できる。</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">コードオプション</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>bang-patterns</em></td>
+<td align="left">- バン！パターン(強制正格評価パターン)</td>
+</tr>
+<tr class="even">
+<td align="left"><em>cpp</em></td>
+<td align="left">HaskellコードをCプリプロセッサにかけてからコンパイル</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>exists</em></td>
+<td align="left">- existsキーワードを存在型の解釈に使う</td>
+</tr>
+<tr class="even">
+<td align="left"><em>ffi</em></td>
+<td align="left">他言語関数インタフェース(FFI)を使う</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>forall</em></td>
+<td align="left">- forallキーワードをランクN多相と明白な量化に用いる</td>
+</tr>
+<tr class="even">
+<td align="left"><em>m4</em></td>
+<td align="left">Haskellコードをm4プリプロセッサにかけてからコンパイル</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>prelude</em></td>
+<td align="left">Preludeを暗黙の内にimportする</td>
+</tr>
+<tr class="even">
+<td align="left"><em>type-families</em></td>
+<td align="left">Type Families(型族)を使う</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>unboxed-tuples</em></td>
+<td align="left">アンボックス化タプル文法を許容する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>unboxed-values</em></td>
+<td align="left">アンボックス化値文法を許容する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>user-kinds</em></td>
+<td align="left">ユーザ定義の種を使う</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">型検査</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>defaulting</em></td>
+<td align="left">型のデフォルト化を行なう</td>
+</tr>
+<tr class="even">
+<td align="left"><em>monomorphism-restriction</em></td>
+<td align="left">単相性制限を強制する</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">デバッグ</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>lint</em></td>
+<td align="left">より多くの型検査を行なう</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">最適化オプション</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>global-optimize</em></td>
+<td align="left">Eによってプログラム全体を最適化する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>inline-pragmas</em></td>
+<td align="left">inlineプラグマを使う</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>rules</em></td>
+<td align="left">rulesプラグマを使う</td>
+</tr>
+<tr class="even">
+<td align="left"><em>type-analysis</em></td>
+<td align="left">メソッド生成直後に型に対する基本的なpoints-to analysisを適用する</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">コード生成</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>boehm</em></td>
+<td align="left">Boehm GCを使う</td>
+</tr>
+<tr class="even">
+<td align="left"><em>debug</em></td>
+<td align="left">実行バイナリ中のデバッグコードを有効に</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>full-int</em></td>
+<td align="left">32bitマシンでIntとWordを32bitに拡張する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>jgc</em></td>
+<td align="left">jgcガーベッジコレクタを使う</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>profile</em></td>
+<td align="left">実行バイナリ中のプロファイルコードを有効に</td>
+</tr>
+<tr class="even">
+<td align="left"><em>raw</em></td>
+<td align="left">main関数をWHNFとして評価する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>standalone</em></td>
+<td align="left">単独実行可能にコンパイル</td>
+</tr>
+<tr class="even">
+<td align="left"><em>wrapper</em></td>
+<td align="left">main関数を例外ハンドラで包む</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">設定既定値</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>default</em></td>
+<td align="left">inline-pragmas rules wrapper defaulting type-analysis monomorphism-restriction global-optimize full-int prelude</td>
+</tr>
+<tr class="even">
+<td align="left"><em>glasgow-exts</em></td>
+<td align="left">forall ffi unboxed-tuples</td>
+</tr>
+</tbody>
+</table>
+<h2 id="デバッグ情報のダンプ"><a href="#デバッグ情報のダンプ">デバッグ情報のダンプ</a></h2>
+<p>'-d'フラグ付きでAjhcを起動することで各種パラメータを出力できる。 次に挙げるのは'-d'フラグに渡すことができるパラメータのリストである。</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">フロントエンド</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>defs</em></td>
+<td align="left">モジュール内で定義された名前を列挙する(?)</td>
+</tr>
+<tr class="even">
+<td align="left"><em>derived</em></td>
+<td align="left">自動導出されたインスタンスを表示する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>exports</em></td>
+<td align="left">モジュールからエクスポートされている名前を列挙する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>imports</em></td>
+<td align="left">モジュールがインポートしている名前を列挙する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>ini</em></td>
+<td align="left">iniファイルのオプションを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>parsed</em></td>
+<td align="left">パース済みコードを出力</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>preprocessed</em></td>
+<td align="left">プリプロセス後のコードを出力</td>
+</tr>
+<tr class="even">
+<td align="left"><em>renamed</em></td>
+<td align="left">renaming後のコードを出力</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>scc-modules</em></td>
+<td align="left">強結合したモジュールを依存度順に表示</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">型検査</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>all-types</em></td>
+<td align="left">型検査完了後に型テーブルを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>aspats</em></td>
+<td align="left">アズパターンを表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>bindgroups</em></td>
+<td align="left">束縛グループを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>boxy-steps</em></td>
+<td align="left">型推論の挙動をステップバイステップで表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>class</em></td>
+<td align="left">個々の型クラスの詳細情報を表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>class-summary</em></td>
+<td align="left">型クラス群の概要を表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>dcons</em></td>
+<td align="left">データコンストラクタを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>decls</em></td>
+<td align="left">処理済みの宣言を表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>instance</em></td>
+<td align="left">インスタンスを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>kind</em></td>
+<td align="left">モジュールへの種推論の結果を表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>kind-steps</em></td>
+<td align="left">種推論のステップを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>program</em></td>
+<td align="left">プログラム全体の構造</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>sigenv</em></td>
+<td align="left">型シグニチャ初期状態の表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>srcsigs</em></td>
+<td align="left">renaming後の型シグニチャを表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>types</em></td>
+<td align="left">定義された全ての名前を含んでいる型テーブルを表示</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">中間コード</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>core</em></td>
+<td align="left">core言語コードを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>core-afterlift</em></td>
+<td align="left">hoファイルに書き込む直前のcoreコードを表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>core-beforelift</em></td>
+<td align="left">lambda lifting直前のcoreコードを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>core-initial</em></td>
+<td align="left">E.FromHs転換直前のcoreコードを表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>core-mangled</em></td>
+<td align="left">grinにかける前の型なしcoreコードを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>core-mini</em></td>
+<td align="left">個々の関数の最適化の詳細を表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>core-pass</em></td>
+<td align="left">コード変形の経過を表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>core-steps</em></td>
+<td align="left">コンパイルパスそれぞれのステップについて表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>datatable</em></td>
+<td align="left">コンストラクタのデータテーブルを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>datatable-builtin</em></td>
+<td align="left">ビルドイン型のデータテーブルを表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>e-alias</em></td>
+<td align="left">展開済みエイリアスを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>e-info</em></td>
+<td align="left">束縛された値のタグ情報を表示</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>e-size</em></td>
+<td align="left">コンパイルパスそれぞれでのEのサイズを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>e-verbose</em></td>
+<td align="left">Eコードに冗長なメッセージを表示させる</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>optimization-stats</em></td>
+<td align="left">最適化パスのスタティクスを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>rules</em></td>
+<td align="left">ユーザ定義の書き換え規則を表示する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>rules-spec</em></td>
+<td align="left">特殊化書き換え規則を表示する</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Grinコード</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>grin</em></td>
+<td align="left">grinコードを表示する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>grin-datalog</em></td>
+<td align="left">データベースに適したフォーマットでgrinの情報を印字する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>grin-final</em></td>
+<td align="left">C言語への変換直前のgrinコードを表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>grin-graph</em></td>
+<td align="left">最終的なgrinコードをdotファイルをoutputname_grin.dotに出力する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>grin-initial</em></td>
+<td align="left">core言語から変換された直後のgrinコード</td>
+</tr>
+<tr class="even">
+<td align="left"><em>grin-normalized</em></td>
+<td align="left">最初の正規化を行なった直後のgrinコード</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>grin-posteval</em></td>
+<td align="left">eval/applyインライン化直後のgrinコード</td>
+</tr>
+<tr class="even">
+<td align="left"><em>grin-preeval</em></td>
+<td align="left">eval/applyインライン化直前のgrinコード</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>steps</em></td>
+<td align="left">インタープリタの実行を表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>tags</em></td>
+<td align="left">タグと型を列挙する</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">バックエンドコード</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>c</em></td>
+<td align="left">コンパイル時に生成したC言語ソースファイルを削除しない</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">内部</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>atom</em></td>
+<td align="left">終了時にatomテーブルをダンプする</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">一般</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>progress</em></td>
+<td align="left">通常のプログレス表示を行なう</td>
+</tr>
+<tr class="even">
+<td align="left"><em>stats</em></td>
+<td align="left">その他の情報を表示する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>verbose</em></td>
+<td align="left">冗長なプログレス表示</td>
+</tr>
+<tr class="even">
+<td align="left"><em>veryverbose</em></td>
+<td align="left">スタティクスを含む冗長なプログレス表示</td>
+</tr>
+</tbody>
+</table>
+<h1 id="プラグマ"><a href="#プラグマ">プラグマ</a></h1>
+<p>プラグマは特別なコンパイラへの指示で、コンパイラの挙動に特定の影響を与える。 一般的には、コンパイラは自由に独自のプラグを定義できる。 しかしAjhcでは他のコンパイラでも使われているものを実装しようと努めている。 プラグマはソースコード中で {-# PRAGMANAME ... #-} のような形式で使われる。</p>
+<h2 id="関数の属性"><a href="#関数の属性">関数の属性</a></h2>
+<p>これらのプラグマは関数定義のあるファイルと同じファイル中に記述すべき。 インスタンスやクラスの関数に適用するためには、 これらのプラグマをインスタンスやクラスの宣言の節に配置しなければならない。</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">プラグマ</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>NOINLINE</em></td>
+<td align="left">core変形中のインライン化を抑制する。当該関数はgrin変形中にインライン化される <em>かもしれない</em> 。</td>
+</tr>
+<tr class="even">
+<td align="left"><em>INLINE</em></td>
+<td align="left">可能であれば関数をインライン化する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>SUPERINLINE</em></td>
+<td align="left">関数本体を単に複製することになったとしても、とにかくインライン化を行なう</td>
+</tr>
+<tr class="even">
+<td align="left"><em>VCONSTRUCTOR</em></td>
+<td align="left">関数を仮想コンストラクタとして扱う。CPR解析とworker/wrapper変換は関数をコンストラクタとして扱うことがある。これは'NOINLINE'で実装される。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="クラスプラグマ"><a href="#クラスプラグマ">クラスプラグマ</a></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">プラグマ</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>NOETA</em></td>
+<td align="left">デフォルトではAjhcは最適化のために全てのクラスメソッドをイータ変換する。このプラグマはこの挙動を無効化する</td>
+</tr>
+</tbody>
+</table>
+<h2 id="書き換え規則と特殊化"><a href="#書き換え規則と特殊化">書き換え規則と特殊化</a></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">プラグマ</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>RULES</em></td>
+<td align="left">書き換え規則。GHCの書き換え規則と同様の構文で同様の振舞いをする。ただし、'phase'を使うことはできない。</td>
+</tr>
+<tr class="even">
+<td align="left"><em>CATALYST</em></td>
+<td align="left">特殊な書き換え規則で、他のRULESの使用中でのみ発火する。そのためCATALYSTは最良でない中間ステージを要求する最適化を許す。</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>SPECIALIZE</em></td>
+<td align="left">指定された型で特殊化された関数を生成する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>SUPERSPECIALIZE</em></td>
+<td align="left">SPECIALIZEと同じ効力がある。しかし一般化された関数にて特殊化された呼び出しかどうかランタイムでの検査を行なう。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="型プラグマ"><a href="#型プラグマ">型プラグマ</a></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">プラグマ</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>CTYPE</em></td>
+<td align="left">FFIでdataもしくはnewtypeを使うたえに、外部の型を指定する。</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">この型はnewtypeかforeign宣言された型の単項コンストラクタでなければならない。</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">例えば</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><sub>~</sub></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">data {-# CTYPE &quot;unsigned short&quot; #-} CUShort = CUShort Word16</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><sub>~</sub></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ヘッダプラグマ"><a href="#ヘッダプラグマ">ヘッダプラグマ</a></h2>
+<p>これらのプラグマはファイルの'先頭'でのみ有効である。 つまりこれらは最初の'module'宣言の前に置かれなければならず、 ファイルの先頭4096バイト以内に配置されねばらなず、 そしてASCII文字セットのみしか使ってはならない。</p>
+<p>OPTIONS_JHC : その他のオプションを指定する。これらのオプションはコマンドラインオプションとしても利用できるが、単一のファイルにのみ影響を与えたい場合に重宝する。</p>
+<p>LANGUAGE : 言語拡張のオプションを指定する</p>
+<h1 id="拡張"><a href="#拡張">拡張</a></h1>
+<h2 id="モジュールのサーチパス"><a href="#モジュールのサーチパス">モジュールのサーチパス</a></h2>
+<p>他のHaskellコンパイラと同じように、Ajhcでのモジュールはその名前にもとづいて検索される。 'Data.Foo'モジュールを検索するとAjhcは'Data/Foo.hs'ファイルも検索するが、 'Data.Foo.hs'も同じく検索対象になる。</p>
+<h2 id="ffiへの拡張"><a href="#ffiへの拡張">FFIへの拡張</a></h2>
+<h3 id="複数の返値をともなうforeign-import"><a href="#複数の返値をともなうforeign-import">複数の返値をともなうforeign import</a></h3>
+<p>foreign C importは複数の値を返すことがある。 このような場合、アンボックス化タプルを返値として使う。 最初の返値は関数から直接返された値であり、 残りは関数の引数リストの終端へのポインタが返ってくる。 純粋な(IOではない)関数でのみ複数の値を返値として使うことができる。</p>
+<pre><code>-- frexpはC言語のプロトタイプ宣言として
+-- double frexp(double x, int *exp);
+-- を持つ。そのため、IOとして通常のimportをすることができ、
+-- 他の純粋な関数へ渡すにはStorableを使うことになる。
+
+foreign import ccall &quot;math.h frexp&quot; c_frexp :: Double -&gt; Ptr CInt -&gt; IO
+Double
+
+-- この拡張を使うと以下のように宣言できる。
+foreign import ccall &quot;math.h frexp&quot; c_frexp2 :: Double -&gt; (# Double, CInt #)
+
+-- 二番目の返値は最後の&#39;exp&#39;パラメータによって追加されて、アロケートされた
+-- メモリから読み出される。関数に渡されるメモリの内容は未定義である。</code></pre>
+<h3 id="呼び出し規約capi"><a href="#呼び出し規約capi">呼び出し規約'capi'</a></h3>
+<p>呼び出し規約'capi'は'ccall'を使ってたimportのかわりに使われる。 この規約を使うことで、foreignする対象はアドレス空間に実体がなくても良い。 マクロやビルドイン関数もしくはその他コンパイラ独自の機能であっても良い。 Ajhcはルーチンが決してポインタとしては使用されないこと、依存するヘッダをインクルードすること保証する。 これは'ccall'と異なる。ccallはヘッダがスコープに入っているか、正しい名前のリンカのためのシンボルがエクスポートされているか、なんの保証もしない。</p>
+<h3 id="パッケージに関連した依存"><a href="#パッケージに関連した依存">パッケージに関連した依存</a></h3>
+<p>p:foo.c や p:foo.h と書かれたforeign importはそのファイルがパッケージ内部実装の一部として解釈されることを意味している。 Ajhcはそれらのファイルが同じ名前を持っていても他のパッケージと衝突しないことを保証する。 それらのファイルはライブラリファイルのc-filesとc-headersの項目に列挙されるべきである。</p>
+<h2 id="importexportされる名前空間"><a href="#importexportされる名前空間">import/exportされる名前空間</a></h2>
+<p>Ajhcはimportやexportする際の名前空間を持つ。 これらはimport/export宣言によって制限されたり修正されたりする。</p>
+<pre><code>* &#39;type&#39; - 名前が型シノニムであり、&#39;type&#39;や&#39;newtype&#39;,&#39;data&#39;,種宣言のコンストラクタで定義されている
+* &#39;class&#39; - 名前がクラスであることを指定
+* &#39;data&#39;  - 名前がデータコンストラクタであることを指定
+* &#39;kind&#39;  - 名前がユーザ定義の種であることを指定</code></pre>
+<p>型クラスと型シノニムは独立した名前空間にあるので、 同じ名前の型シノニムと型クラスが同じスコープに存在しても問題ない。</p>
+<h2 id="ユーザ定義された種"><a href="#ユーザ定義された種">ユーザ定義された種</a></h2>
+<p>-fuser-kindsオプションが有効な場合、Ajhcはユーザ定義の種を使用可能にする。 その文法は:</p>
+<pre><code>data kind Nat = Z | S Nat</code></pre>
+<p>ここでは新しい種'Nat'と、その種に存在する2つの型'Zと'S'を定義している。 これらの型は値を持たないアンボックス化された値として表現された種の宣言によって定義されている。 そのためこれらはランタイムでの表現を持たない。(当然、⊥でさえない)</p>
+<h2 id="独立deriving"><a href="#独立deriving">独立deriving</a></h2>
+<p>Ajhcはある環境下にて独立derivingをサポートする。</p>
+<h2 id="ランクn多相性"><a href="#ランクn多相性">ランクN多相性</a></h2>
+<p>Ajhcは高ランク多相性をサポートする。 文脈が高ランク多相型を明確に指定しても、Ajhcは高ランクの型推論を行なわない。 例えば、型注釈と多相として定義されたデータコンストラクタへの引数を与えれば、正しい多相型が手に入る。</p>
+<h2 id="存在型"><a href="#存在型">存在型</a></h2>
+<p>Ajhcはファーストスラスの存在型をサポートする。 それは'exists'キーワードで使用できる。 また存在データ型はghcと似た方法でサポートしている。</p>
+<h2 id="アンボックス化された値"><a href="#アンボックス化された値">アンボックス化された値</a></h2>
+<p>Ajhcでのアンボックス化された値はGHCと同様に指定できる。 ただし、# をその識別子としては使用しない。 各種アンボックス化されたコンストラクタのための構文として # はまだ使われているが、 通常のHaskellのルールをがHaskellの識別子に使われる。 コンベンションとして'_'の接尾辞の付いた型はアンボックス化された状態にあることを示している。 アンボックス化タプル以外の全てのアンボックス化された値は、-funboxed-valueフラグによって有効になる。 GHCとの互換性のため、MagicHash拡張でもアンボックス化型を有効にできる。</p>
+<h3 id="アンボックス化タプル"><a href="#アンボックス化タプル">アンボックス化タプル</a></h3>
+<p>AjhcはGHCと同じ文法でアンボックス化タプルをサポートする。(# 2, 4 #) は2つの数値を持つアンボックス化タプルである。 アンボックス化タプルは-funboxed-tuplesオプションによって有効にできる。 アンボックス化タプルは種多相であり、ボックス化とアンボックス化の両方おん値を保持することができる。 (しかし他のアンボックス化タプルを保持することはできない)</p>
+<h3 id="アンボックス化文字列"><a href="#アンボックス化文字列">アンボックス化文字列</a></h3>
+<p>アンボックス化文字列は-funboxed-valuesフラグによって有効になる。 通常の文字列と異なり、その名前は'#'で終わる。 アンボックス化文字列は'BitsPtr_'型である。</p>
+<h3 id="アンボックス化文字"><a href="#アンボックス化文字">アンボックス化文字</a></h3>
+<p>アンボックス化文字は通常の文字リテラルの後に # を付けて表現する。 アンボックス化文字はChar_型であり、さらにJhc.Prim.Bitsに定義のあるBits32_のnewtypeでもある。</p>
+<h3 id="アンボックス化数値"><a href="#アンボックス化数値">アンボックス化数値</a></h3>
+<p>アンボックス化数値は-funboxed-valuesフラグによって有効になる。 それらは 3# や 4# のように'#'を付けて表現する。 もし型が環境によって完全に指定されてて、かつそれが適切なアンボックス化数値型であるなら、Ajhcは型推論を限定的にサポートする。 そうでない場合にはInt__をデフォルトとして使用する。 型が完全に指定されているかどうかにかかわらず、ランクN型として同じルールが適用される。 アンボックス化数値は列挙可能である。 そのため 0# はアンボックス化されたFalse値として使うことができる。 そして型推論も行なわれる。</p>
+<h3 id="アンボックス化された値の取り扱い"><a href="#アンボックス化された値の取り扱い">アンボックス化された値の取り扱い</a></h3>
+<p>アンボックス化値を取り扱うために、適切なプリミティブの演算子をスコープ内に用意する必要がある。 プリミティブのimportのために特殊なFFI宣言を使うことができる。 全てのC--プリミティブはユーティリティ関数と同様にimportできる。 プリミティブimportはのしくみは'スマート'で、newtype宣言を通りぬけ、ボックス化/アンボックス化値が必要か面倒をみてくれる。 だからあなたがプリミティブをCharにimportしたなら、 それが'Char'コンストラクタをボックス化されていると認識し、 Char_がBits32_のnewtypeであることも認識してくれる。 そして遂には正しいBits32_プリミティブを選択してくれるのだ。 importされたプリミティブは通常のHaskell宣言である。 だからモジュールからexport/importできるし、通常の高階関数としても扱える。</p>
+<h2 id="foreignプリミティブ"><a href="#foreignプリミティブ">Foreignプリミティブ</a></h2>
+<p>FFIの仕様であるforeign importに加えてjhcは'primitive' importをサポートしていて、 あなたはこれを用いてコンパイラと直接通信することができる。 一般的にこれらは基盤ライブラリの実装以外の用途に使われるべきではない。 一般にこれらは少ないエラーチェックしか行なわない。 jhc内では、すべてのHaskellのエントリはforeign宣言によって形づくられている。</p>
+<p>それらは以下の形を取る。</p>
+<pre><code>foreign import primitive &quot;specification&quot; haskell_name :: type</code></pre>
+<p>&quot;specification&quot;には以下を選択できる。</p>
+<p>seq : 最初の引数をWHNFとして評価し、二番目の引数を返す</p>
+<p>zero,one : 0か1の値をプリミティブ型に使う</p>
+<p>const.C_CONSTANT : constに続くテキストをコンパイル結果のC言語ソースコードに直接埋め込む</p>
+<p>peek.TYPE : TYPE型の値の読み込みプリミティブ</p>
+<p>poke.TYPE : TYPE型の値の書き込みプリミティブ</p>
+<p>sizeOf.TYPE, alignmentOf.TYPE, minBound.TYPE, maxBound.TYPE, umaxBound.TYPE : 内部型TYPEの各種属性</p>
+<p>error.MESSAGE : results in an error with constant message MESSAGE.</p>
+<p>constPeekByte : 指定したバイト数、定数値を読み込み、Jhc.Stringとして使う</p>
+<p>box : アンボックス化値を取り、それをボックス化する。ボックス化された形はimportされた型によって決まる</p>
+<p>unbox : ボックス化値を取り、アンボックス化する。ボックスの形はimportされた型によいって決まる</p>
+<p>increment, decrement : 整数のプリミティブ値を増減させる</p>
+<p>fincrement, fdecrement : 浮動小数点のプリミティブ値を増減させる</p>
+<p>exitFailure__ : プログラムを即時abortさせる</p>
+<p>C-- Primitive : C--プリミティブはこの作法でimportする</p>
+<h1 id="差異"><a href="#差異">差異</a></h1>
+<h2 id="haskell-98との違い"><a href="#haskell-98との違い">Haskell 98との違い</a></h2>
+<h3 id="言語差分"><a href="#言語差分">言語差分</a></h3>
+<ul>
+<li><p>データタイプ内のクラス文脈は単に無視される。</p></li>
+<li><p>クラスメソッドはイータ変換されて引数の数は型によって指定される。 部分適用することがめったにないインスタンスではこれはしばしば有益だ。 この挙動はNOETAプラグマによって無効にできる。</p></li>
+</ul>
+<h3 id="ライブラリへの変更"><a href="#ライブラリへの変更">ライブラリへの変更</a></h3>
+<p>GHCのbaseにおおざっぱに沿ったbaseライブラリに加えて、 jhcはいくつかの拡張とマイナーな修正を標準ライブラリに施している。 これらは大部分は後方互換性とクラスシステムのためにデザインされている。</p>
+<ul>
+<li>Data.Bits
+<ul>
+<li>NumはData.Bitsのスーパークラスではない。</li>
+<li>logicalShiftRとarithmeticShiftR関数を追加した。それぞれ論理的、算術的なシフトを行なう。</li>
+<li>shiftRとshiftL関数は負の引数をチェックしない。 もし負の引数を使うならば一般的な'shift'ルーチンを使うこと。 'shift'にはまた論理的と算術的なバリエーションがある。</li>
+</ul></li>
+</ul>
+<h3 id="ライブラリの追加"><a href="#ライブラリの追加">ライブラリの追加</a></h3>
+<p>jhcはその他多くの追加ライブラリを提供している。 ここではHaskell98もしくはFFIの仕様で定義されているモジュールに影響する変更だけを挙げるにとどめる。</p>
+<ul>
+<li><p>Data.IntとData.Wordは左記を提供するWordPtr, WordMax, IntPtr, IntMax。 これらはそれぞれC言語のuintptr_t, uintmax_t, intptr_t, intmax_t型に該当する。</p></li>
+<li><p>IntegerとRationalクラスの実装近くのにfromInt,toInt,fromDouble,toDouble が追加された。</p></li>
+<li><p>浮動小数点の切り捨てと丸める関数に相違がある。 それらは整数型を返さず、引数と同じ型をかわりに返す。 これらの関数名には'f'という接尾辞が付いている。</p></li>
+</ul>
+<h2 id="ghcとの注目すべき差異"><a href="#ghcとの注目すべき差異">GHCとの注目すべき差異</a></h2>
+<p>jhcはHaskell 98には準拠しているがGHCとの差異がある。</p>
+<ul>
+<li><p>Intは30ビットしか保持せず、切り捨ては検知できない。 もし数値にビット幅とバイナリの意味論が必要な場合、Data.IntかData.Wordの型を使用すること。 IntやWordがあふれた場合の結果は未定義である。</p></li>
+<li><p>文字はUnicode幅の値しか保持できない。 そのため0x10FFFFより多きな保存されている値は未定義な結果をもたらす。</p></li>
+<li><p>例え64ビットアーキティクチャ上でもIntとWord型は最大でも32ビット幅である。</p></li>
+<li><p>テキストベースのIOは現在のロケールで実行される。 つまりUnicodeについてはうまく使用できるが、 IOが8ビット文字を仮定する古いプログラムは異常なふるまいになる。 もしバイナリのIOが必要であれば、バイナリのルーチンを明示的に使うこと。</p></li>
+</ul>
+<h2 id="仕様の欠陥"><a href="#仕様の欠陥">仕様の欠陥</a></h2>
+<p>これらの仕様の欠陥は将来修正される予定である。</p>
+<ul>
+<li><p>Integer型は任意精度型ではなく、IntMax型と同じ精度である。 適切な任意精度ライブラリが見つかれば、この問題は修正されるだろう。</p></li>
+<li><p>Ix型は自動導出できない。</p></li>
+</ul>
+<h1 id="クロスコンパイル"><a href="#クロスコンパイル">クロスコンパイル</a></h1>
+<h2 id="基本"><a href="#基本">基本</a></h2>
+<p>他の多くのコンパイラと異なり、Ajhcは生来のクロスコンパイラである。 これが意味することは、Ajhcによるコンパイルによって、どんなターゲットシステムのためのコードも生成できるということである。 これにより、Ajhcを利用したクロスコンパイルが非常に簡単になる。 基本的には、クロスコンパイルを行うためにはAjhcに '--cross' フラグと、 ターゲットマシンを指定するオプション '-m'を渡せば良い。 以下がその例である。</p>
+<pre><code>; ajhc --cross -mwin32 test/HelloWorld.hs</code></pre>
+<p>targets.iniファイルに以下のような表記を追加すれば、ターゲットのリストを拡張できる。</p>
+<h2 id="targets.ini"><a href="#targets.ini">targets.ini</a></h2>
+<p>このファイルは利用可能なターゲットを列挙する。 フォーマットは以下のエントリから成り立っている。</p>
+<pre><code>[targetname]
+key1=value
+key2=value
+key3+=value
+merge=targetname2</code></pre>
+<p>mergeは特別なキーで他のターゲットから現在のターゲットへ内容をマージしていることを意味する。 設定ファイルは先頭から順に読み込まれ、 与えられたキーに対応する最後の値が実際に使われる。</p>
+<p>次に示すのはWindowsクロスコンパイルの例である:</p>
+<pre><code>[win32]
+cc=i386-mingw32-gcc
+cflags+=-mwindows -mno-cygwin
+executable_extension=.exe
+merge=i686</code></pre>
+<p>上記は一般のi686設定を使って少々の他のオプションをコンパイラに設定している。 特別なターゲットである[default]は常に他のターゲットより先に読み込まれる。 もしコマンドラインから'--cross'が指定されたら暗黙にこの設定を読み込む。 さもなければAjhcは現アーキティクチャをコンパイル対象としてみなして、 defaultに追加して適切なターゲットを選択する。</p>
+<p>Ajhcは複数のtargets.iniファイルを順に読み込もう試みる。 それらのファイルは以下である。</p>
+<p>$PREFIX/etc/ajhc-$VERSION/targets.ini : このtargets.iniファイルはAjhcによって読み込まれ、既定のオプションを含む。</p>
+<p>$PREFIX/etc/ajhc-$VERSION/targets-local.ini : Ajhcは存在すればこのファイルを読み込む。このファイルはローカルのコンパイラのようなシステムグローバルのカスタム設定を含む。</p>
+<p>$HOME/.ajhc/targets.ini : ユーザローカルの設定</p>
+<p>$HOME/etc/ajhc/targets.ini : このファイルは隠し属性のディレクトリを嫌う人向けのものである</p>
+<p>オプションについて有効とみなされるのは最後の値である。 ユーザ定義のローカル設定はシステムグローバルのローカル設定を上書きする。 またシステムグローバルのローカル設定は組み込みのオプションを上書きする。</p>
+<h2 id="利用可能なオプション"><a href="#利用可能なオプション">利用可能なオプション</a></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>cc</em></td>
+<td align="left">Cコンパイラを指定。一般に手元でのコンパイルにはgccを指定し、クロスコンパイルには<span class="math"><em>A</em><em>R</em><em>C</em><em>H</em> − </span>HOST-gccを指定する。</td>
+</tr>
+<tr class="even">
+<td align="left"><em>byteorder</em></td>
+<td align="left">リトル/ビッグエンディアンのために <em>le</em> もしくは <em>be</em> を指定する</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>gc</em></td>
+<td align="left">GCを使う。<em>static</em> もしくは <em>boehm</em> を指定する。</td>
+</tr>
+<tr class="even">
+<td align="left"><em>cflags</em></td>
+<td align="left">Cコンパイラに渡すオプション</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>cflags_debug</em></td>
+<td align="left">デバッグが有効な場合のにみCコンパイラに渡すオプション</td>
+</tr>
+<tr class="even">
+<td align="left"><em>cflags_nodebug</em></td>
+<td align="left">デバッグが無効な場合のにみCコンパイラに渡すオプション</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>profile</em></td>
+<td align="left">プロファイルコードを実行バイナリに出力する</td>
+</tr>
+<tr class="even">
+<td align="left"><em>autoload</em></td>
+<td align="left">自動読み込みされるHaskellライブラリを指定。コンマで区切る。</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>executable_extension</em></td>
+<td align="left">実行バイナリファイルの拡張子を指定する (すなわちWindowsでは.EXEとなる)</td>
+</tr>
+<tr class="even">
+<td align="left"><em>merge</em></td>
+<td align="left">他の設定ターゲットの内容を現ターゲットにマージする特別なオプション</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>bits</em></td>
+<td align="left">このアーキティクチャでポインタが保有するビット数</td>
+</tr>
+<tr class="even">
+<td align="left"><em>bits_max</em></td>
+<td align="left">整数型の最大値が保有するビット数。これは'intmax_t'のC言語型と同じビット数でなければならない。</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>arch</em></td>
+<td align="left">gccに渡すアーキティクチャ名</td>
+</tr>
+</tbody>
+</table>
+<h2 id="special-defines-to-set-cflags"><a href="#special-defines-to-set-cflags">Special defines to set cflags</a></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Define</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">_JHC_ARM_STAY_IN_THUMB_MODE</td>
+<td align="left">set bit0 to any function pointers, for Cortex-M*. (<a href="http://communities.mentor.com/community/cs/archives/arm-gnu/msg01904.html">more detail</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_JGC_NAIVEGC</td>
+<td align="left">run gc when have no more blocks.</td>
+</tr>
+<tr class="odd">
+<td align="left">_JHC_JGC_STACKGROW</td>
+<td align="left">number of stack entry growed when run short of it.</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_JGC_FIXED_MEGABLOCK</td>
+<td align="left">use a single megablock without allocation megablock.</td>
+</tr>
+<tr class="odd">
+<td align="left">_JHC_JGC_BLOCK_SHIFT</td>
+<td align="left">bit shift to specify block size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_BLOCK_SHIFT)).</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_JGC_MEGABLOCK_SHIFT</td>
+<td align="left">bit shift to specify megablock size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_MEGABLOCK_SHIFT)).</td>
+</tr>
+</tbody>
+</table>
+<h1 id="内部設計"><a href="#内部設計">内部設計</a></h1>
+<h2 id="ランタイムシステム"><a href="#ランタイムシステム">ランタイムシステム</a></h2>
+<p>Ajhcは強いミニマリストであり、あらかじめコンパイルされたランタイムを持たない。 ランタイムはコンパイル時に必要になった際に生成される。 けれどもバックエンドは、GCの選択のように、ランタイム特定のデータ表現を持つ。 C言語ベースのバックエンドのための一般レイアウトを次に示す。 しかしGC種別のようなコンパイラオプションやプログラム全体解析は、どの機能が使われて、最適化されたレイアウトが使用できるかに影響を及ぼす。</p>
+<p>アンボックス化値はターゲットの言語の値に直接翻訳される。 アンボックス化Intは引数として直接'int'に翻訳される。 またアンボックス化ポインタは生のポインタになる。 アンボックス化値は特別な解釈を持たず、 <em>GCは面倒をみてくれない</em> 。 もしターゲットの言語が複数返値のような機能をサポートしていない場合、シミュレーションする必要がある。 grinコードが複数返値が補強されたC--もしくはCへの同型としてのみアンボックス化値を取り扱うのは悪い考えではない。</p>
+<p>ボックス化された値は標準の表現を持っている。 他の実装と異なり、ボックス化されることがオブジェクトがヒープに配置されることを意味しない。 それはスタックやヒープに確保されるかもしれない。 さらにはスマートポインタの中に組み込まれているかもしれない。 ボックス化されていることはオブジェクトがスマートポインタによって表現されているか、 実際には伝統的なポインタであるかもしれないのだ。</p>
+<p>Ajhcにおけるボックス化された値はC言語型のsptr_tという'スマートポインタ'である。 スマートポインタは通常のポインタと同じサイズを持つが、 1つのペアのタグビットで表わされる別の役割もおっている。 それはptypeと呼ばれる。</p>
+<p>スマートポインタは一般に以下の形をしている:</p>
+<pre><code>-------------------------
+|    payload        | GL|
+-------------------------
+
+  G - セットされると、GCは値をポインタとして取り扱わない
+  L - 遅延。このビットがセットされると値はWHNFではないことを示す</code></pre>
+<p>sptr_tは以下の形の内どれか一つの状態にある:</p>
+<pre><code>-------------------------
+|    whnf raw value | 10|
+-------------------------
+
+-------------------------
+|    whnf location  | 00|
+-------------------------</code></pre>
+<p>WHNFは'Weak Head Normal Form'を表わしている。 さらにその値は中断された関数ではなく、それゆえサンクへのポインタでもない。 それは直接検査されるかもしれず、また評価される必要がないかもしれない。 wptr_tはsptr_tの別名で、上記の形式を取っていることを保証するためにある。 これは安全性を向上させるために使われ、 値がWHNFであり高価な'eval'をスキップできるかどうかを静的に知ることができる。</p>
+<p>生の値とWHNF配置の違いは、 前者は未解釈のビットを保持しているが、 後者はヒープやスタックへのポインターであるためにGCが回収する必要があるということだ。 WHNF配置によって指し示されたメモリのフォーマットは実際の型表現に依存していていちがいに決まってはいない。</p>
+<p>部分適用された関数は通常のWHNF値である。 'eval'されたか更新された全適用された関数はサンクと呼ばれ、WHNFのポインタから指示されない。 これらの表現は以下である。</p>
+<pre><code>-------------------------
+|   lazy location   | 01|
+-------------------------</code></pre>
+<p>遅延配置はサンクもしくはWHNFへのリダイレクトトを指し示す。 遅延配置は必ずアロケートされたメモリ領域を差し、 その領域の先頭は制限されたスマートポインタである。 この制限されたスマートポインタはC言語の'fptr_t'型で表現される。 fptr_tは遅延配置の先頭エントリのためだけに存在し、 それらはオブジェクトとして流通することはない。</p>
+<p>fptr_tはWHNF値もしくはコードへのポインタである可能性がある。 もしfptr_tが(上図2種類の内の一つのような)WHNF値ならそれはリダイレクションと呼ばれる。 遅延配置はそれがWHNFによるものだと厳密に取り扱わなければならない。 これは評価済みサンクへのリダイレクトとして使われる。</p>
+<p>fptr_tはまた'コードポインタ'である可能性があり、 この場合遅延配置はサンクと呼ばれる。 コードポインタは実行可能な機械語へのポインタで、それはクロージャを評価してwptr_tを返す。 返却されたwptr_tは通常、サンクをリダイレクションに変更するために、コードポインタを書きつぶす。 指示されたコードはこのリダイレクションを実行する責任がある。</p>
+<pre><code>-------------------------
+|    code pointer   | 11|
+-------------------------
+|     data ...          |</code></pre>
+<p>デバッグ時には特殊なコードポインタBLACK_HOLEが時々fptr_tに格納されている。 これはある種のランタイムエラーを検出する。</p>
+<p>他の実装と異なりfptr_tは遅延配置の別の形では <em>ない</em> ことに注意すること。 あなたはリダイレクションをチェーンしてはいけない。 リダイレクションは常にWHNF値へのリダイレクションでなければならない。</p>
+<pre><code>sptr_t - タグ付けされたスマートポインタ。WHNF値か遅延配置を保持する。
+wptr_t - タグ付けされたスマートポインタ。生か配置情報のWNHF値を保持する。
+fptr_t - タグ付けされたスマートポインタ。リダイレクションを示すWHNF値かサンクを示すコードポインタを保持する。</code></pre>
+<h2 id="ajhcコア型システム"><a href="#ajhcコア型システム">Ajhcコア型システム</a></h2>
+<p>Ajhcのコアは純粋なpure type systemにもとづいている。 pure type system (PTS)は型システムのパラメータ化されたセットである。 AjhcのPTSについて以下で解説する。</p>
+<pre><code>種類 = (*, !, **, #, (#), ##, □)
+公理 = (*:**, #:##, !:**, **:□, ##:□)
+
+-- 種類kind(種)
+*   ボックス化値の種
+!   ボックス化された正格値の種
+#   アンボックス化された種
+(#) アンボックス化タプルの種
+-- 種類superkind
+**  全てのボックス化値のsuperkind
+##  全てのアンボックス化値のsuperkind
+-- 種類box
+□   superkindの存在位置
+
+ユーザ定義の種の存在に加えて、supersort ##が存在する。</code></pre>
+<p>次に示すルール表は抽象の種類を表現している。 (A,B,C)の形をもつルールは種類Aから種類Bへの関数で結果が種類Cであることを意味している。 この文脈での <em>関数</em> は項と型レベルの抽象を含んでいる。</p>
+<p>アンボックス化タプルを引数に取り正格であるかもしれないが、 関数はいつもボックス化されていることに注意すること。 コードを直接指示するポインタによって表現され、関数が正格であるなら、 関数の評価が中断された値であることはありえない。</p>
+<p>これらの型システムのルールはλ抽象に適用される。 これらのルールによって、与えられた型を取れないデータコンストラクタが存在してしまうかもしれないが、それは許容できる。 例としてはアンボックス化タプルがある。 部分適用された関数であったとしてもそれらのコンストラクタが型エラーであることを正しく推論するのは困難ではない。</p>
+<pre><code>ショートカットとしてここでは *# を * と # の組み合わせをとして使う。
+例えば、 (*#,*#,*) は (*,*,*) (#,*,*) (*,#,*) (#,#,*) のセットを意味している。
+
+ルール =
+   (*#!,*#!,*)  -- 値から値への関数で、ボックス化されていて非正格
+   (*#!,(#),*)  -- 値からアンボックス化タプルへの関数で、ボックス化されていて非正格
+   ((#),*#!,!)  -- アンボックス化タプルから値への関数で、ボックス化されていて正格
+   ((#),(#),!)  -- アンボックス化タプルからアンボックス化タプルへの関数で、ボックス化されていて正格
+   (**,*,*)     -- アンボックス化型から値への関数を保持している可能性がある
+   (**,#,*)
+   (**,!,*)
+   (**,**,**)  -- 型から型への関数を持てる
+   (**,##,##)  -- MutArray_ :: * -&gt; #
+   (##,##,##)  -- Complex_ :: # -&gt; #
+
+ボックス化値の定義は以下である。
+
+_|_ :: t iff t::*
+
+このPTSは関数的であるが単射ではない。</code></pre>
+<p>このPTSは次のレベルに階層化されている。</p>
+<pre><code>□               - 種類box
+**,##,           - 種類superkind
+*,#,(#),!        - 種類kind(種)
+Int,Bits32_,Char - 種類type(型)
+3,True,&quot;bob&quot;     - 種類value(値)</code></pre>
+<h3 id="ボックス化kind種について"><a href="#ボックス化kind種について">ボックス化kind(種)について</a></h3>
+<p>ボックス化kind(* や !)は同型のランタイム表現を持つ型を表現する。 このため、関数はこれらのkindの型で多相的に記述することができる。 (**,?,?)という形のルールがあるため、ボックス化されたkindの型を引数として取ることができる。</p>
+<p>アンボックス化されたkind # は独自のランタイム表現を持つ型に存在する。 アンボックス化型を多相的に使う関数を書くことはできない。</p>
+<h3 id="種類boxアンボックス化タプルとその同類について"><a href="#種類boxアンボックス化タプルとその同類について">種類box、アンボックス化タプルとその同類について</a></h3>
+<p>種類boxはコード中に現われないけれど、アンボックス化タプルのようなある種の型について理論的な視点から有用である。 アンボックス化タプルはボックス化/アンボックス化どちらの引数も取れる。 これを表現することは種類boxなしにそれは不可能だ。 なぜならsuperkind多相でなければならないから。 種類boxは次のような表現を許す。 (これはアンボックス化2タプルのケースである)</p>
+<pre><code>∀s1:□ ∀s2:□ ∀k1:s1 ∀k2:s2 ∀t1:k1 ∀t2:k2 . (# t1, t2 #)</code></pre>
+<p>たとえアンボックス化タプルが部分適用されることが妥当な型付けでも (##,?,?) もしくは (□,?,?) の形のルールは許容しないのだから、 この型は明らかに型検査されない。 アンボックス化タプルがいつも全適用されるという不変条件が強制されるなら種類boxのコード表現もまた不要になる。</p>
+<h4 id="superboxは必要か"><a href="#superboxは必要か">superboxは必要か？</a></h4>
+<p>種類の公理を見て接続の不足したグラフになっていることに、あなたは気付くかもしれない。</p>
+<pre><code>         □            - box
+        / \
+      **   ##          - superkind
+      /\     \
+     *  !     #   (#)  - kind(種)</code></pre>
+<p>これは単に、それらのsuper-sort(種類)は本来不要であるが、kind (#) のアンボックス化タプルが多相性を欠如していることにに起因する。 このギャップを埋めるために(##)と(□)、□□の種類を導入できる。 これらの種類は決してコードや論文には現われないが、気にしないことにする。</p>
+<pre><code>           □□          - 種類superbox
+          /  \
+         □    (□)      - 種類box
+        / \      \
+      **   ##     (##)   - 種類superkind
+      /\     \    |
+     *  !     #   (#)    - 種類kind(種)</code></pre>
+</body>
+</html>

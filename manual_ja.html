@@ -70,7 +70,7 @@
 <li><a href="#基本">基本</a></li>
 <li><a href="#targets.ini">targets.ini</a></li>
 <li><a href="#利用可能なオプション">利用可能なオプション</a></li>
-<li><a href="#special-defines-to-set-cflags">Special defines to set cflags</a></li>
+<li><a href="#cflagsで指定できる特殊なdefine">cflagsで指定できる特殊なdefine</a></li>
 </ul></li>
 <li><a href="#内部設計">内部設計</a><ul>
 <li><a href="#ランタイムシステム">ランタイムシステム</a></li>
@@ -963,38 +963,38 @@ merge=i686</code></pre>
 </tr>
 </tbody>
 </table>
-<h2 id="special-defines-to-set-cflags"><a href="#special-defines-to-set-cflags">Special defines to set cflags</a></h2>
+<h2 id="cflagsで指定できる特殊なdefine"><a href="#cflagsで指定できる特殊なdefine">cflagsで指定できる特殊なdefine</a></h2>
 <table>
 <thead>
 <tr class="header">
 <th align="left">Define</th>
-<th align="left">Meaning</th>
+<th align="left">意味</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">_JHC_ARM_STAY_IN_THUMB_MODE</td>
-<td align="left">set bit0 to any function pointers, for Cortex-M*. (<a href="http://communities.mentor.com/community/cs/archives/arm-gnu/msg01904.html">more detail</a>)</td>
+<td align="left">Cortex-M*などのアーキティクチャのために関数ポインタのビット0を1にする (<a href="http://communities.mentor.com/community/cs/archives/arm-gnu/msg01904.html">詳細</a>)</td>
 </tr>
 <tr class="even">
 <td align="left">_JHC_JGC_NAIVEGC</td>
-<td align="left">run gc when have no more blocks.</td>
+<td align="left">ブロックが不足した際にGCする</td>
 </tr>
 <tr class="odd">
 <td align="left">_JHC_JGC_STACKGROW</td>
-<td align="left">number of stack entry growed when run short of it.</td>
+<td align="left">GCスタックが不足した際に新たに確保するGCスタックエントリ数</td>
 </tr>
 <tr class="even">
 <td align="left">_JHC_JGC_FIXED_MEGABLOCK</td>
-<td align="left">use a single megablock without allocation megablock.</td>
+<td align="left">メガブロックを動的に確保せず、静的に確保されたメガブロックを一つだけ使う</td>
 </tr>
 <tr class="odd">
 <td align="left">_JHC_JGC_BLOCK_SHIFT</td>
-<td align="left">bit shift to specify block size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_BLOCK_SHIFT)).</td>
+<td align="left">ブロックの大きさを指定するビットシフト。内部ではこのように使われる: (1 &lt;&lt; (<em>JHC</em>JGC_BLOCK_SHIFT)).</td>
 </tr>
 <tr class="even">
 <td align="left">_JHC_JGC_MEGABLOCK_SHIFT</td>
-<td align="left">bit shift to specify megablock size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_MEGABLOCK_SHIFT)).</td>
+<td align="left">メガブロックの大きさを指定するビットシフト。内部ではこのように使われる: (1 &lt;&lt; (<em>JHC</em>JGC_MEGABLOCK_SHIFT)).</td>
 </tr>
 </tbody>
 </table>

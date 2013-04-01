@@ -81,19 +81,14 @@ with sufficient functionality to develop
 
 <p>It's easy to install Ajhc on <a href="http://www.debian.org/">Debian</a> flaver system.</p>
 
-<pre><code>$ sudo apt-get install make locales autoconf libreadline-dev \
-  libwww-perl libconfig-yaml-perl graphviz haskell-platform drift pandoc \
-  libghc-readline-dev libghc-utf8-string-dev libghc-hssyck-dev libghc-pandoc-dev
-$ git clone git://github.com/ajhc/ajhc.git
-$ cd ajhc
-$ git checkout arafura
-$ autoreconf -i
-$ ./configure
-$ make
-$ sudo make install
+<pre><code>$ cabal install ajhc
 $ ajhc --version
 ajhc 0.8.0.1 (80aa12fb9b57622bba2f0e911d7ebc0c04ddb662)
 compiled by ghc-7.4 on a x86_64 running linux
+$ echo 'main = print "hoge"' > Hoge.hs
+$ ajhc Hoge.hs
+$ ./hs.out
+"hoge"
 </code></pre>
 
 <h3>Usage</h3>

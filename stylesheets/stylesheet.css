@@ -146,6 +146,7 @@ header a.button {
   position: absolute;
   right: 0;
   top: 0;
+  padding-right: 82px;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
 aside a.button {

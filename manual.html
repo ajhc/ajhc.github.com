@@ -982,6 +982,14 @@ merge=i686</code></pre>
 <td align="left">run gc when have no more blocks.</td>
 </tr>
 <tr class="odd">
+<td align="left">_JHC_JGC_LIMITED_NUM_GC_STACK</td>
+<td align="left">number of limited gc_stack entry.</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_JGC_GC_STACK_SHIFT</td>
+<td align="left">bit shift to specify gc_stack size. Use it internally like this: (1 &lt;&lt; (_JHC_JGC_GC_STACK_SHIFT)).</td>
+</tr>
+<tr class="odd">
 <td align="left">_JHC_JGC_STACKGROW</td>
 <td align="left">number of stack entry growed when run short of it.</td>
 </tr>
@@ -991,11 +999,11 @@ merge=i686</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">_JHC_JGC_BLOCK_SHIFT</td>
-<td align="left">bit shift to specify block size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_BLOCK_SHIFT)).</td>
+<td align="left">bit shift to specify block size. Use it internally like this: (1 &lt;&lt; (_JHC_JGC_BLOCK_SHIFT)).</td>
 </tr>
 <tr class="even">
 <td align="left">_JHC_JGC_MEGABLOCK_SHIFT</td>
-<td align="left">bit shift to specify megablock size. Use it internally like this: (1 &lt;&lt; (<em>JHC</em>JGC_MEGABLOCK_SHIFT)).</td>
+<td align="left">bit shift to specify megablock size. Use it internally like this: (1 &lt;&lt; (_JHC_JGC_MEGABLOCK_SHIFT)).</td>
 </tr>
 </tbody>
 </table>

@@ -176,10 +176,10 @@ valid -d arguments: &#39;help&#39; for more info
     types, verbose, veryverbose
 
 valid -f arguments: &#39;help&#39; for more info
-    bang-patterns, boehm, controlled, cpp, debug, default, defaulting, exists, ffi, forall, full-int
-    glasgow-exts, global-optimize, inline-pragmas, jgc, lint, m4, monomorphism-restriction, negate
-    prelude, profile, raw, rules, standalone, type-analysis, type-families, unboxed-tuples
-    unboxed-values, user-kinds, wrapper</code></pre>
+    bang-patterns, boehm, controlled, cpp, customthread, debug, default, defaulting, exists, ffi
+    forall, full-int, glasgow-exts, global-optimize, inline-pragmas, jgc, lint, m4
+    monomorphism-restriction, negate, nothread, prelude, profile, pthread, raw, rules, standalone
+    type-analysis, type-families, unboxed-tuples, unboxed-values, user-kinds, wrapper</code></pre>
 <h2 id="code-options"><a href="#code-options">Code Options</a></h2>
 <p>Various options affecting how Ajhc interprets and compiles code can be controlled with the '-f' flag, the following options are availible, you can negate any particular one by prepending 'no-' to it.</p>
 <table>
@@ -307,30 +307,42 @@ valid -f arguments: &#39;help&#39; for more info
 <td align="left">use Boehm garbage collector</td>
 </tr>
 <tr class="even">
+<td align="left"><em>customthread</em></td>
+<td align="left">use your own thread mechanism</td>
+</tr>
+<tr class="odd">
 <td align="left"><em>debug</em></td>
 <td align="left">enable debugging code in generated executable</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><em>full-int</em></td>
 <td align="left">extend Int and Word to 32 bits on a 32 bit machine (rather than 30)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><em>jgc</em></td>
 <td align="left">use the jgc garbage collector</td>
+</tr>
+<tr class="even">
+<td align="left"><em>nothread</em></td>
+<td align="left">do not support thread</td>
 </tr>
 <tr class="odd">
 <td align="left"><em>profile</em></td>
 <td align="left">enable profiling code in generated executable</td>
 </tr>
 <tr class="even">
+<td align="left"><em>pthread</em></td>
+<td align="left">use pthread for concurrency</td>
+</tr>
+<tr class="odd">
 <td align="left"><em>raw</em></td>
 <td align="left">just evaluate main to WHNF and nothing else.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><em>standalone</em></td>
 <td align="left">compile to a standalone executable</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><em>wrapper</em></td>
 <td align="left">wrap main in exception handler</td>
 </tr>

@@ -176,10 +176,10 @@
     types, verbose, veryverbose
 
 -fオプションの引数: &#39;-f help&#39;オプションで詳細
-    bang-patterns, boehm, controlled, cpp, debug, default, defaulting, exists, ffi, forall, full-int
-    glasgow-exts, global-optimize, inline-pragmas, jgc, lint, m4, monomorphism-restriction, negate
-    prelude, profile, raw, rules, standalone, type-analysis, type-families, unboxed-tuples
-    unboxed-values, user-kinds, wrapper</code></pre>
+    bang-patterns, boehm, controlled, cpp, customthread, debug, default, defaulting, exists, ffi
+    forall, full-int, glasgow-exts, global-optimize, inline-pragmas, jgc, lint, m4
+    monomorphism-restriction, negate, nothread, prelude, profile, pthread, raw, rules, standalone
+    type-analysis, type-families, unboxed-tuples, unboxed-values, user-kinds, wrapper</code></pre>
 <h2 id="コードオプション"><a href="#コードオプション">コードオプション</a></h2>
 <p>Ajhcの解釈やコンパイルは'-f'フラグでコントロールできる。 これらのオプションを以下に列挙する。また、その効力は'no-'をフラグ名に付けることで無効化できる。</p>
 <table>
@@ -307,30 +307,42 @@
 <td align="left">Boehm GCを使う</td>
 </tr>
 <tr class="even">
+<td align="left"><em>customthread</em></td>
+<td align="left">コンパイラ利用者が独自にスレッド機構を作成</td>
+</tr>
+<tr class="odd">
 <td align="left"><em>debug</em></td>
 <td align="left">実行バイナリ中のデバッグコードを有効に</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><em>full-int</em></td>
 <td align="left">32bitマシンでIntとWordを32bitに拡張する</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><em>jgc</em></td>
 <td align="left">jgcガーベッジコレクタを使う</td>
+</tr>
+<tr class="even">
+<td align="left"><em>nothread</em></td>
+<td align="left">外部のスレッド機構を使わない</td>
 </tr>
 <tr class="odd">
 <td align="left"><em>profile</em></td>
 <td align="left">実行バイナリ中のプロファイルコードを有効に</td>
 </tr>
 <tr class="even">
+<td align="left"><em>pthread</em></td>
+<td align="left">並行実行のためにpthreadを使う</td>
+</tr>
+<tr class="odd">
 <td align="left"><em>raw</em></td>
 <td align="left">main関数をWHNFとして評価する</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><em>standalone</em></td>
 <td align="left">単独実行可能にコンパイル</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><em>wrapper</em></td>
 <td align="left">main関数を例外ハンドラで包む</td>
 </tr>

@@ -165,6 +165,7 @@
                     --stale=Module            Treat these modules as stale, even if they exist in the cache
                     --list-libraries          List of installed libraries
                     --tdir=dir/               specify the directory where all intermediate files/dumps will be placed.
+                    --targetsini=targets.ini  specify the targets.ini file.
 
 valid -d arguments: &#39;help&#39; for more info
     all-types, aspats, atom, bindgroups, boxy-steps, c, class, class-summary, core, core-afterlift
@@ -1020,6 +1021,10 @@ merge=i686</code></pre>
 <tr class="odd">
 <td align="left">_JHC_JGC_MEGABLOCK_SHIFT</td>
 <td align="left">bit shift to specify megablock size. Use it internally like this: (1 &lt;&lt; (_JHC_JGC_MEGABLOCK_SHIFT)).</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_USE_OWN_STDIO</td>
+<td align="left">force you should implement your own printf,fputs,fflush,getchar,getc,putchar,putc.</td>
 </tr>
 </tbody>
 </table>

@@ -165,6 +165,7 @@
                     --stale=Module            指定したモジュールがコンパイルキャッシュにあっても古い情報として扱う
                     --list-libraries          インストール済みライブラリを表示
                     --tdir=dir/               中間生成物を出力するディレクトリを指定する
+                    --targetsini=targets.ini  指定したtargets.iniファイルを使う
 
 -dオプションの引数: &#39;-d help&#39;オプションで詳細
     all-types, aspats, atom, bindgroups, boxy-steps, c, class, class-summary, core, core-afterlift
@@ -1019,6 +1020,10 @@ merge=i686</code></pre>
 <tr class="odd">
 <td align="left">_JHC_JGC_MEGABLOCK_SHIFT</td>
 <td align="left">メガブロックの大きさを指定するビットシフト。内部ではこのように使われる: (1 &lt;&lt; (<em>JHC</em>JGC_MEGABLOCK_SHIFT)).</td>
+</tr>
+<tr class="even">
+<td align="left">_JHC_USE_OWN_STDIO</td>
+<td align="left">独自のprintf,fputs,fflush,getchar,getc,putchar,putc関数実装を要求する</td>
 </tr>
 </tbody>
 </table>

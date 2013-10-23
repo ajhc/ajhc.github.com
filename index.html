@@ -57,14 +57,14 @@
 <p>Ajhc is a Haskell compiler, and acronym for the following:</p>
 <ul>
 <li>A fork of <a href="http://repetae.net/computer/jhc/">jhc</a></li>
-<li>An accelerator for jhc</li>
+<li>An accelerator to develop jhc</li>
 <li><a href="http://metasepi.org/en/posts/2013-01-09-design_arafura.html">Metasepi Arafura</a> designed jhc</li>
 </ul>
 
 <h3>Why need Ajhc?</h3>
 
-<p><a href="http://repetae.net/computer/jhc/">Jhc</a> converts Haskell code into pure C language code running with jhc's RTS.
-And the RTS is written with 3000 line (include comments) pure C code.
+<p><a href="http://repetae.net/computer/jhc/">Jhc</a> converts Haskell code into pure C language code running with jhc's runtime.
+And the runtime is written with 3000 line (include comments) pure C code.
 It's a magic!</p>
 
 <p><img src="draw/2012-12-22-jhc_compile.png" alt="Jhc compiler pipeline"></p>
@@ -75,7 +75,7 @@ can't pull the contribution speedy. (I think he is too busy to do it.)
 We should <a href="https://github.com/ajhc/ajhc#for-developing">feedback jhc</a> any changes.
 And also Ajhc aims to provide
 <a href="http://metasepi.org/">Metasepi project</a>
-with method to rewrite <a href="http://netbsd.org/">NetBSD kernel</a> using Haskell.
+with a method to rewrite <a href="http://netbsd.org/">NetBSD kernel</a> using Haskell.
 The method is called <a href="http://www.slideshare.net/master_q/20131020-osc-tokyoajhc">Snatch-driven development</a>.</p>
 
 <p>Ajhc is, so to speak, an accelerator to develop jhc.</p>
@@ -91,7 +91,7 @@ The method is called <a href="http://www.slideshare.net/master_q/20131020-osc-to
 <p>The demo is running code that compiled with Ajhc on Cortex-M3 board,
 <a href="http://mbed.org/">mbed</a>.
 It's a simple RSS reader for reddit.com, show the RSS titles on Text LCD panel.
-You can get the demo detail and source code from
+You can get the demo detail and source code at
 <a href="https://github.com/ajhc/demo-cortex-m3">https://github.com/ajhc/demo-cortex-m3</a>.</p>
 
 <h3>Demo: Android NDK application written with Haskell</h3>
@@ -99,14 +99,15 @@ You can get the demo detail and source code from
 <iframe width="420" height="315" src="http://www.youtube.com/embed/n6cepTfnFoo" frameborder="0" allowfullscreen></iframe>
 
 <p>The touchable cube application is written with Haskell and compiled by Ajhc.
-You can get the demo source code from
+The demo breaks the application when running GC using ndk-gdb debugger.
+You can get the demo source code at
 <a href="https://github.com/ajhc/demo-android-ndk">https://github.com/ajhc/demo-android-ndk</a>.
-Also you can read slide of the detail at <a href="http://www.slideshare.net/master_q/20131020-osc-tokyoajhc">http://www.slideshare.net/master_q/20131020-osc-tokyoajhc</a>.</p>
+Also you can read slide about the detail at <a href="http://www.slideshare.net/master_q/20131020-osc-tokyoajhc">http://www.slideshare.net/master_q/20131020-osc-tokyoajhc</a>.</p>
 
 <h3>How to install Ajhc</h3>
 
-<p>It's easy to install Ajhc with Cabal.
-And Ajhc supports running on Windows (experimental).</p>
+<p>Easy to install Ajhc with Cabal.
+Ajhc supports running on Windows and Mac OS X (experimental).</p>
 
 <pre><code>$ cabal install ajhc
 $ ajhc --version
@@ -125,7 +126,10 @@ $ ./hs.out
 
 <h3>License</h3>
 
-<p><a href="https://github.com/ajhc/ajhc/blob/arafura/COPYING">GPLv2 or Later</a>.</p>
+<p><ul>
+<li>Compiler pipeline: <a href="https://github.com/ajhc/ajhc/blob/arafura/COPYING">GPLv2 or Later</a>.</li>
+<li>Runtime: ... Please contact John ...</li>
+</ul></p>
 
 <h3>Contact</h3>
 

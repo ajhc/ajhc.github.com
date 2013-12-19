@@ -112,10 +112,12 @@ Also read slide about the detail at <a href="http://www.slideshare.net/master_q/
 
 <p>Easy to install Ajhc with Cabal.</p>
 
-<pre><code>$ cabal install drift
+<pre><code>$ sudo apt-get install haskell-platform gcc m4 patch libncurses5-dev
+$ cabal install drift
+$ export PATH=$PATH:$HOME/.cabal/bin
 $ cabal install ajhc
 $ ajhc --version
-ajhc 0.8.0.1 (80aa12fb9b57622bba2f0e911d7ebc0c04ddb662)
+ajhc 0.8.0.10 (66a602abc10dec74e2c0bb9289819a015bf21e4f)
 compiled by ghc-7.4 on a x86_64 running linux
 $ echo 'main = print "hoge"' > Hoge.hs
 $ ajhc Hoge.hs
